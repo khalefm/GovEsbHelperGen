@@ -2,6 +2,7 @@ package com.example.GovEsbSignature.controller;
 
 import com.example.GovEsbSignature.dto.EsbRequestDTO;
 import com.example.GovEsbSignature.service.EsbRequestService;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -21,9 +22,9 @@ public class EsbRequestController {
     }
 
     @PostMapping("/submit")
-    public ResponseEntity<String> createEsbRequest(@RequestBody EsbRequestDTO esbRequestDTO, @RequestParam String apiCode) {
+    public ResponseEntity<String> createEsbRequest(@RequestBody ObjectNode esbRequestDTO, @RequestParam String apiCode) {
         try {
-            String requestBody = esbRequestService.createEsbRequest(esbRequestDTO, apiCode);
+            String requestBody = esbRequestService.createEsbRequest(esbRequestDTO, apiCode, "pushCode");
             return ResponseEntity.ok("Request processed successfully: " + requestBody);
         } catch (IOException | GeneralSecurityException e) {
             e.printStackTrace(); // Log the exception as needed

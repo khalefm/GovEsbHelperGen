@@ -43,46 +43,34 @@ public class EsbRequestService {
     @Autowired
     private ObjectMapper objectMapper;
 
-    public String createEsbRequest(EsbRequestDTO requestDTO, String apiCode) throws IOException, GeneralSecurityException {
+    public String createEsbRequest(ObjectNode payload, String apiCode, String codeType) throws IOException, GeneralSecurityException {
+
+        // Ensure the payload has the required structure
+        if (!payload.has("header") || !payload.has("message_info")) {
+            throw new IllegalArgumentException("Payload must contain 'header' and 'message_info'");
+        }
+
         // Map DTO to JSON nodes
         ObjectNode esbBodyNode = objectMapper.createObjectNode();
+        // Construct the esbBody structure
+        esbBodyNode.set("header", payload.get("header"));
+        esbBodyNode.set("message_info", payload.get("message_info"));
 
-        // Convert header
-        ObjectNode headerNode = objectMapper.convertValue(requestDTO.getHeader(), ObjectNode.class);
+        // Create the complete payload structure
+        ObjectNode completePayload = objectMapper.createObjectNode();
+        completePayload.put(codeType,apiCode);
+        completePayload.set("esbBody", esbBodyNode);
 
-        // Include apiCode in the header or body as needed
-        headerNode.put("apiCode", apiCode); // Add apiCode to the header
+        // Convert the complete payload to a string signing
+        String dataString = objectMapper.writeValueAsString(completePayload);
 
-        // Add client ID and public key to the header (example usage)
-        headerNode.put("clientId", clientId);
-        headerNode.put("publicKey", esbPublicKey);
-        headerNode.put("clientSecret", clientSecret);
-        headerNode.put("esbTokenUrl", esbTokenUrl);
-        headerNode.put("esbEngineUrl", esbEngineUrl);
 
-        // Convert other sections
-        ObjectNode messageInfoNode = objectMapper.createObjectNode();
-        messageInfoNode.set("general_info", objectMapper.convertValue(requestDTO.getGeneralInfo(), ObjectNode.class));
-        messageInfoNode.set("transport_info", objectMapper.convertValue(requestDTO.getTransportInfo(), ObjectNode.class));
-        messageInfoNode.set("invoice_info", objectMapper.convertValue(requestDTO.getInvoiceInfo(), ObjectNode.class));
-
-        // Convert list of items
-        ArrayNode itemsNode = objectMapper.valueToTree(requestDTO.getItems());
-        messageInfoNode.set("item_info", itemsNode);
-
-        esbBodyNode.set("header", headerNode);
-        esbBodyNode.set("message_info", messageInfoNode);
-
-        // Create final data structure
-        ObjectNode dataNode = objectMapper.createObjectNode();
-        dataNode.set("esbBody", esbBodyNode);
-
-        String dataString = objectMapper.writeValueAsString(dataNode);
+        // Create signature using provided signing method
         String signature = signText(dataString, loadPrivateKey());
 
-        // Wrap with final request node
+        // Assemble the final request with the signature
         ObjectNode requestNode = objectMapper.createObjectNode();
-        requestNode.set("data", dataNode);
+        requestNode.set("data", completePayload);
         requestNode.put("signature", signature);
 
         return objectMapper.writeValueAsString(requestNode);

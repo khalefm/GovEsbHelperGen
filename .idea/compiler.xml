@@ -7,16 +7,19 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="connector" />
         <module name="GovEsbSignature" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="connector" target="1.8" />
       <module name="GovEsbSignature" target="1.8" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="GovEsbSignature" options="-parameters" />
+      <module name="connector" options="-parameters" />
     </option>
   </component>
 </project>

@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/GovEsbSignature/GovEsbSignature.iml" filepath="$PROJECT_DIR$/GovEsbSignature/GovEsbSignature.iml" />
+      <module fileurl="file://$PROJECT_DIR$/GovEsbSignature/connector.iml" filepath="$PROJECT_DIR$/GovEsbSignature/connector.iml" />
     </modules>
   </component>
 </project>
