@@ -88,7 +88,7 @@ public class EsbRequestService {
 
         // Use your private key directly instead of loading it from a file
         String privateKeyPem = "-----BEGIN PRIVATE KEY-----\n" +
-                "MGACAQAwEAYHKoZIzj0CAQYFK4EEACMESTBHAgEBBEIA69+H+HhhiWbk+deFRVMvJlKnUiuPFVlpckZPcXWki6+JWTmzehtzQrdwglCUIPq0JXZp6cfDgzNGNf8+ZEtBmk0=\n" +
+                "MD4CAQAwEAYHKoZIzj0CAQYFK4EEAAoEJzAlAgEBBCBzonWQafD5+PRwZPvO3DlRR3EM/KIXxtBJ5Hx19q5JCA==\n" +
                 "-----END PRIVATE KEY-----";
 
         // Convert PEM to PrivateKey

@@ -22,10 +22,10 @@ public class EsbRequestController {
     }
 
     @PostMapping("/submit")
-    public ResponseEntity<String> createEsbRequest(@RequestBody ObjectNode esbRequestDTO, @RequestParam String apiCode) {
+    public ResponseEntity<String> createEsbRequest(@RequestBody ObjectNode payloadDto, @RequestParam String apiCode) {
         try {
-            String requestBody = esbRequestService.createEsbRequest(esbRequestDTO, apiCode, "pushCode");
-            return ResponseEntity.ok("Request processed successfully: " + requestBody);
+            String requestBody = esbRequestService.createEsbRequest(payloadDto, apiCode, "pushCode");
+            return ResponseEntity.ok(requestBody);
         } catch (IOException | GeneralSecurityException e) {
             e.printStackTrace(); // Log the exception as needed
             return ResponseEntity.status(500).body("Error processing request: " + e.getMessage());
