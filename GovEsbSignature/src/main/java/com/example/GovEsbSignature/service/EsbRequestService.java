@@ -21,23 +21,18 @@ import java.security.spec.PKCS8EncodedKeySpec;
 
 public class EsbRequestService {
 
-//    @Value("${esb.private-key}")
-//    private String privateKeyPem;
-
-    @Value("${esb.public-key}")
+    @Value("${ESB_PUBLIC_KEY}")
     private String esbPublicKey;
 
-    @Value("${esb.client-id}")
+    @Value("${CLIENT_ID}")
     private String clientId;
 
-    @Value("${esb.client-secret}")
+    @Value("${CLIENT_SECRET}")
     private String clientSecret;
 
-    @Value("${esb.token-url}")
-    private String esbTokenUrl;
 
-    @Value("${esb.engine-url}")
-    private String esbEngineUrl;
+    @Value("${PRIVATE_KEY}")
+    private String privateKeyPem;
 
 
     @Autowired
@@ -84,17 +79,13 @@ public class EsbRequestService {
         return Base64.toBase64String(signature);
     }
 
-    private PrivateKey loadPrivateKey() throws NoSuchAlgorithmException, InvalidKeySpecException {
-
-        // Use your private key directly instead of loading it from a file
-        String privateKeyPem = "-----BEGIN PRIVATE KEY-----\n" +
-                "MD4CAQAwEAYHKoZIzj0CAQYFK4EEAAoEJzAlAgEBBCBzonWQafD5+PRwZPvO3DlRR3EM/KIXxtBJ5Hx19q5JCA==\n" +
-                "-----END PRIVATE KEY-----";
+    private PrivateKey loadPrivateKey() throws GeneralSecurityException {
 
         // Convert PEM to PrivateKey
         byte[] keyBytes = Base64.decode(privateKeyPem.replace("-----BEGIN PRIVATE KEY-----", "")
                 .replace("-----END PRIVATE KEY-----", "")
                 .replaceAll("\\s+", ""));
+
 
         PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(keyBytes);
         KeyFactory keyFactory = KeyFactory.getInstance("EC");

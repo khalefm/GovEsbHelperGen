@@ -22,9 +22,11 @@ public class EsbRequestController {
     }
 
     @PostMapping("/submit")
-    public ResponseEntity<String> createEsbRequest(@RequestBody ObjectNode payloadDto, @RequestParam String apiCode) {
+    public ResponseEntity<String> createEsbRequest(@RequestBody ObjectNode payloadDto) {
+        String apiCode = payloadDto.get("apiCode").asText();
+        String codeType = payloadDto.get("codeType").asText();
         try {
-            String requestBody = esbRequestService.createEsbRequest(payloadDto, apiCode, "pushCode");
+            String requestBody = esbRequestService.createEsbRequest(payloadDto, apiCode, codeType);
             return ResponseEntity.ok(requestBody);
         } catch (IOException | GeneralSecurityException e) {
             e.printStackTrace(); // Log the exception as needed
